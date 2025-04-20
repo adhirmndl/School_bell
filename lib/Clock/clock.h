@@ -22,8 +22,10 @@ public:
     void init(const String& alarmTimings, std::function<void(uint8_t, uint8_t)> callback);
     void setTime(uint8_t hour, uint8_t minute, uint8_t second);
     String getTime();
+    String getRTCStatus();
 
 private:
+    String rtcStatus = "RTC not connected";
     std::vector<Alarm> alarms;
     std::function<void(uint8_t, uint8_t)> alarmCallback;
     time_t lastCheckedDay;

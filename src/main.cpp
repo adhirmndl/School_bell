@@ -22,6 +22,8 @@ void processCommand(String command) {
   command = command.substring(0, command.indexOf('\n')); // Get first line only
 
   if (command.startsWith("help")) {
+    String rtc_status = "RTC: " + rtcClock.getRTCStatus() + "\n\n";
+    bluetoothBle.sendData(rtc_status);
     String s = "getTime/N -> send current time N times\n";
     s += "setTime/HH:MM:SS -> to set time\n";
     s += "getAlarm -> get current alarm\n";
@@ -107,7 +109,6 @@ void processCommand(String command) {
 void setup() {
 	Serial.begin(115200);
 	deviceStorage.begin();
-	pinMode(relayPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
 	bluetoothBle.init("school_bell");
 	bluetoothBle.setCommandCallback(&processCommand);

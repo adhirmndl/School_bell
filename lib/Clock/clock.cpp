@@ -12,13 +12,17 @@ Clock::Clock() : lastCheckedDay(0) {
 void Clock::init(const String& alarmTimings, std::function<void(uint8_t, uint8_t)> callback) {
     Wire.begin(21, 22);
     if (!rtc.begin()) {
-        Serial.println("Couldn't find RTC");
+        rtcStatus = "RTC not connected";
+        Serial.println(rtcStatus);
         while (1);
     }
 
     if (rtc.lostPower()) {
-        Serial.println("RTC lost power, setting default time!");
+        rtcStatus = "RTC lost power, setting default time!";
+        Serial.println(rtcStatus);
         rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    } else {
+        rtcStatus = "connected";
     }
 
     alarmCallback = callback;
@@ -38,6 +42,10 @@ void Clock::init(const String& alarmTimings, std::function<void(uint8_t, uint8_t
 void Clock::setTime(uint8_t hour, uint8_t minute, uint8_t second) {
     DateTime now = rtc.now();
     rtc.adjust(DateTime(now.year(), now.month(), now.day(), hour, minute, second));
+}
+
+String Clock::getRTCStatus() {
+    return rtcStatus;
 }
 
 String Clock::getTime() {
